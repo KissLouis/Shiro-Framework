@@ -11,6 +11,7 @@
 		<module>shiro-framework1-basic</module>
 		<module>shiro-framework2-web</module>
 		<module>shiro-framework3-realm</module>
+		<module>shiro-framework4-ssm</module>
 	</modules>
 
 	<properties>
