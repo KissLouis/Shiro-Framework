@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	">
+	
+	<!-- 使用基础连接池 -->
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://127.0.0.1:3306/shiro?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true" />
+		<property name="username" value="root" />
+		<property name="password" value="123456" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="60" />
+		<property name="minIdle" value="1" />
+		<property name="maxIdle" value="60" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="120" />
+		<property name="logAbandoned" value="true" />
+		<property name="maxWait" value="2000" />
+		<property name="validationQuery" value="select 1" />
+	</bean>
+
+	<!-- spring集成mybaits配置 -->
+	<bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 配置数据源 -->
+		<property name="dataSource" ref="ds" />
+		<!-- 配置MyBatis路径 -->
+		<property name="configLocation" value="classpath:MyBatisConfig.xml" />
+	</bean>
+
+	<!-- 扫描sql映射,并自动byType注入dao -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="ssf" />
+		<!-- 多个包以英文逗号隔开，例如 :com.accp.x.dao,com.accp.y.dao -->
+		<property name="basePackage" value="com.louis.shiro.dao" />
+	</bean>
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds" />
+	</bean>
+
+	<!-- 元注解驱动模式配置事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 元注解模式配置javabean -->
+	<context:component-scan base-package="com.louis.shiro.service" />
+	
+</beans>
