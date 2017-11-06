@@ -27,7 +27,7 @@ public class AuthenticationTest {
 		
 		// 创建SecurityManager工厂，通过init配置文件构造
         IniSecurityManagerFactory factory = new IniSecurityManagerFactory("classpath:shiro.ini");
- 
+
         // 创建SecurityManager
         SecurityManager securityManager = factory.createInstance();
  
